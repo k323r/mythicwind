@@ -1,7 +1,7 @@
 # to withold data from being commited to the git repo
 ./data
 ./data_noSync
-.sync*.db*
+.*sync*.db*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
