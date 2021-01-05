@@ -13,6 +13,23 @@ An offshore wind turbine undergoing installation is interesting from a research 
 
 For fluid mechanics, closely monitoring offshore wind turbines under wind and wave loading thus compares to a full scale experiment. Monitoring 32 turbines undergoing installation thus enables the measurement a broad spectrum of different states. 
 
+## Physical background
+
+1. An offshore wind turbine under installation conditions can be simplified as a cantlivered beam 
+(circular cross section, rotationally symmetric wall thickness) with an eccentric mass 
+(nacelle with generator) vibrating transversally (fore-aft and side-side in the reference system of the nacelle) und wind and wave loads
+2. Both wind and wave loads are stochastic and are described using statistical models.
+3. Wave loads are a function of the sea state. For a sea states, the most important parameters are significant wave heigh H_m0 and Wave peak period T_P. To a lesser extend, wave direction, zero upcrossing period and maximum wave height are also important. Different statistical models can be used to describe the sea state and the relationship between significant wave heigh H_m0 and wave peak period. Most prominent in the North Sea is the JONSWAP spectrum. 
+4. Wind loads are depending on wind speed, wind direction, shear factor and turbulence intensity. Different statistical models are available to describe the wind spectrum.
+5. Wind and wave loads trigger a structural response of the turbine. The structural response depends on the loading spectrum as well as the transfer function. Furthermore the structural response is strongly depending on damping and elasticity of the structure. In turbines, damping is typically very low (~ 0.5 - 1.5 %). 
+6. The response is dominated by the first Eigenfrequency of the turbine. As the turbine is assumed to be rotationally symmetric, the fore-aft and side-side mode are extremely close together if not indistinguishable [1]. 
+7. The response has the characteristics of a narrow-band random vibration. A narrow-band random vibration is characterized by being dominated by a single, narrow frequency peak (here: first Eigenfrequency). The amplitude envelope follows a Rayleigh distribution and the phase angle is equally distributed between 0 and 2 pi. 
+8. If viewed from above, the structural response describes a closed curve (orbit) which can be characterized by it shape (eccentricity), mean amplitude and direction. Mathematically speaking, this is a lissajous-figure, where the time series from one response direction is plotted as a function of the time series of the second response direction. 
+
+
+---
+[1]: under installation condition
+
 ## Raw data and data publication
 
 Data is publicly available at <http://doi.org/10.5281/zenodo.4141208>
@@ -21,13 +38,10 @@ Investiagtions are ongoing, questions and contributions are welcome.
 
 First results can be found here:
 
-```
-**OMAE 2020 :** Sander, A, Haselsteiner, AF, Barat, K, Janssen, M, Oelker, S, Ohlendorf, J, & Thoben, K. "Relative Motion During Single Blade Installation: Measurements From the North Sea." Proceedings of the ASME 2020 39th International Conference on Ocean, Offshore and Arctic Engineering. Volume 9: Ocean Renewable Energy. Virtual, Online. August 3–7, 2020. V009T09A069. ASME. https://doi.org/10.1115/OMAE2020-18935
-```
 
-```
-**EURODYN 2020 :** Sander, A, Meinhardt, C & Thoben, KD. "Monitoring of Offshore Wind Turbines under Wind and Wave Loading during Installation" Proceedings of the EuroDyn 2020 XI International Conference on Structural Dynamics. Volume 1. Virtual, Online. November 23-26, 2020. https://generalconferencefiles.s3-eu-west-1.amazonaws.com/eurodyn_2020_ebook_procedings_vol1.pdf
-```
+**OMAE 2020 :** Sander, A, Haselsteiner, AF, Barat, K, Janssen, M, Oelker, S, Ohlendorf, J, & Thoben, K. "Relative Motion During Single Blade Installation: Measurements From the North Sea." Proceedings of the ASME 2020 39th International Conference on Ocean, Offshore and Arctic Engineering. Volume 9: Ocean Renewable Energy. Virtual, Online. August 3–7, 2020. V009T09A069. ASME. <https://doi.org/10.1115/OMAE2020-18935>
+
+**EURODYN 2020 :** Sander, A, Meinhardt, C & Thoben, KD. "Monitoring of Offshore Wind Turbines under Wind and Wave Loading during Installation" Proceedings of the EuroDyn 2020 XI International Conference on Structural Dynamics. Volume 1. Virtual, Online. November 23-26, 2020. <https://generalconferencefiles.s3-eu-west-1.amazonaws.com/eurodyn_2020_ebook_procedings_vol1.pdf>
 
 ### Organization of data
 
@@ -146,27 +160,6 @@ data
 
 ```
 
-
-### Physical background
-
-
-
-- Definition, provenance, and interpretation of each variable
-- Groups of variables
-- Units of measurement
-- Data formatting
-  - Naming
-  - Time
-  - Epoch + Time zone
-  - Periods
-  - Matching
-  - Imputation
-  - "Encoding" (e.g. pickle, csv, json, sqlite, ...)
-    - Constraints and guarantees
-    - Normalization and views
-    - Data types for subsequent processing (-> scikit-learn, nltk)
-    - ML: Validation split
-
 ### Data loading API (-> scikit-learn, nltk)
 
 - Download in the background
@@ -185,3 +178,5 @@ data
 
 - Butterworth
 - Amplitude envelope
+
+
