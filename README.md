@@ -3,6 +3,15 @@
 ## Overview
 
 This repository contains scripts, libraries and notebooks used to investigate data from an offshore measurement campaign conducted during the installation of the offshore wind [farm trianel wind farm borkum II](https://www.trianel-borkumzwei.de/). 
+The wind farm consists of 32 Senvion 6XM152 turbines. The installation took place between August 2019 and May 2020. 
+
+An offshore wind turbine undergoing installation is interesting from a research point of view for several reasons:
+- Simple geometry: turbine foundation and tower are both rotationally symmetric steel tubes. Rotational symmetry also leads to (approximate) isotrope structural characteristics in the plane normal to tower and foundation.
+- High Reynolds number flow: Assuming a tower diameter of 6 m, and average wind speeds ranging from 5 m/s to 12 m/s under installation conditions, Reynolds numbers range from 4.5 million to 10.5 million. 
+- Wave loading und full scale conditions.
+- Practical relevance to improving the competability of offshore wind.
+
+For fluid mechanics, closely monitoring offshore wind turbines under wind and wave loading thus compares to a full scale experiment. Monitoring 32 turbines undergoing installation thus enables the measurement a broad spectrum of different states. 
 
 ## Raw data and data publication
 
@@ -20,7 +29,57 @@ First results can be found here:
 **EURODYN 2020 :** Sander, A, Meinhardt, C & Thoben, KD. "Monitoring of Offshore Wind Turbines under Wind and Wave Loading during Installation" Proceedings of the EuroDyn 2020 XI International Conference on Structural Dynamics. Volume 1. Virtual, Online. November 23-26, 2020. https://generalconferencefiles.s3-eu-west-1.amazonaws.com/eurodyn_2020_ebook_procedings_vol1.pdf
 ```
 
-### Metadata and background
+### Organization of data
+
+All data is stored in the data directory. NOTE: due to size limitations of git, the data is stored on [zenodo](http://doi.org/10.5281/zenodo.4141208)
+For each turbine installation, a seperate folder can be found, e.g. turbine_01 for the first and turbine_16 for the 16th turbine. Turbine numbering follows the order of installation. 
+
+Different data sources are organized in subfolders for each turbine dataset. Unfortunately, not every data source is available for each turbine.
+Data sources are roughly sorted into categories. The following table lists these categories:
+
+| Data source | Description                                                            |
+|-------------|------------------------------------------------------------------------|
+| msr         | acceleration measurements, obtained by commercial accelerometer. For details, please refere to the [data description](doc/msr_data_description.md) |
+| tom         | data from custom build sensor boxes. Data includes acceleration, angular acceleration, magnetic field, gnss recording and rough estimates of the eulerian angles. For detail refere to the [data description](doc/tom_data_description) |
+| waves/wave_buoy | Sea state statistics for the installatin period of the turbine. Details can be found in the [data description](doc/wave_buoy_data_description.md) | 
+| waves/fino | Sea state statistics from the german research platform [FINO1](htttps://) located approx. 6 km from the installation site.  Data description [here](doc/fino_wave_data_description.md) | 
+| waves/wave_radar | Sea state statstics, recorded by a wave rider wave laser. Data description is available in the [docs](doc_waverider_waves_data_description.md)
+| wind/lidar | high fidelity wind data recorded on the installation vessel during the installation of the wind farm. Details regarding data recording and data format can be found [here](doc/lida_data_description.md) | 
+| wind/scada | 10 min. mean wind statistisc recorded on wind turbines in the vicinity of the installation site. This data is used in case no LIDAR data is available. Data description can be found [here](doc/scada_data_description.md) | 
+| wind/anemometer | During some of the installations, anemometers were present on the installation vessel. These recordings are sorted into this sub-subfolder. Data description is available [here](doc/anemometer_data_description.md) | 
+| wind/fino | Additonal wind statistics recorded by the FINO research station. Least recommended for investigations, as these recordings were taken approx. 6 km from the installation site. Data description [here](doc/fino_wind_data_description.md) | 
+
+
+The data directory is hence organized in the following order: 
+
+```
+data
+└── turbine_12
+    ├── data_source_1
+    │   └── measurement_1
+    │   └── measurement_2
+    │   └── ...
+```
+
+As an example, the data from turbine 12 is listed below:
+
+```
+data
+└── turbine_12
+    ├── msr
+    │   └── helihoist
+    ├── tom
+    │   └── helihoist
+    │       ├── clean
+    │       └── raw
+    ├── waves
+    └── wind
+```
+
+
+### Physical background
+
+
 
 - Definition, provenance, and interpretation of each variable
 - Groups of variables

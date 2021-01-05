@@ -1,6 +1,6 @@
 # to withold data from being commited to the git repo
-./data
-./data_noSync
+data
+data_noSync
 .*sync*.db*
 
 # Byte-compiled / optimized / DLL files
