@@ -13,6 +13,8 @@ An offshore wind turbine undergoing installation is interesting from a research 
 
 For fluid mechanics, closely monitoring offshore wind turbines under wind and wave loading thus compares to a full scale experiment. Monitoring 32 turbines undergoing installation thus enables the measurement a broad spectrum of different states. 
 
+![Offshore wind turbine und installation conditions](doc/OWT.png)
+
 ## Physical background
 
 1. An offshore wind turbine under installation conditions can be simplified as a cantlivered beam 
