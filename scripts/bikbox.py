@@ -85,7 +85,7 @@ def readLogFile(
     if verbose: print("processing file: {}".format(logFilePath))
 
     if not isfile(logFilePath):
-        print("no such file: {} -> skipping".format(logFile))
+        print("no such file: {} -> skipping".format(logFilePath))
         return None
 
     try:
