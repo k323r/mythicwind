@@ -2,8 +2,10 @@
 
 ### TODO
 
-from tom import *
+from tom import process_data_set_parallel
 
+import numpy as np
+from multiprocessing import Pool
 from glob import glob
 from math import sqrt, log
 
@@ -31,6 +33,13 @@ def parse_commandline_arguments():
     parser.add_argument("--normalize-gps", help="surpress gps data", action="store_true", default=False)
 
     return parser.parse_args()
+
+def write_output_file(frame, out_file_path):
+    try:
+        frame.to_csv(out_file_path)
+    except:
+        print('failed to export data - skippig file {}'.format(out_file_path))
+
 
 
 def run_clean_data():
@@ -64,14 +73,18 @@ def run_clean_data():
         verbose=args.verbose,
         substract_mean=args.substract_mean,
     )
+
+    # check for empty data frames
+    data = {frame : data[frame] for frame in data if not data[frame].empty}
     
-    # insert unix epoch (for christian!) 
+    # insert unix epoch (for bartok!) 
     for frame in data:
         data[frame].insert(
             loc=0,
             column='epoch',
-            value=data[frame].index.astype('int64')//1e9
+            value=data[frame].index.astype('int64')/1.0e9
         )
+
     # parallelize?
     # substract mean for each acceleration component
     if args.substract_mean:
@@ -102,18 +115,45 @@ def run_clean_data():
             data[frame].drop(['latitude', 'longitude'], axis=1, inplace=True)
 
     # output data
+    # parallelize?
 
+    pool = Pool(args.procs)
+    
     for frame in data:
         # parse name
         old_file_name = frame.split('/')[-1].split('.')[0].split('_')[-1]
-        out_file_name = "{}_{}.csv".format(args.output_prefix,  old_file_name)
+        frame_start_time = "{:04}-{:02}-{:02}-{:02}-{:02}-{:02}".format(
+            data[frame].index[0].year,
+            data[frame].index[0].month,
+            data[frame].index[0].day,
+            data[frame].index[0].hour,
+            data[frame].index[0].minute,
+            data[frame].index[0].second,
+        ) 
+        
+        frame_end_time = "{:04}-{:02}-{:02}-{:02}-{:02}-{:02}".format(
+            data[frame].index[-1].year,
+            data[frame].index[-1].month,
+            data[frame].index[-1].day,
+            data[frame].index[-1].hour,
+            data[frame].index[-1].minute,
+            data[frame].index[-1].second,
+        )
+
+        out_file_name = "{}_{}_{}_{}.csv".format(
+            args.output_prefix,
+            frame_start_time,
+            frame_end_time,  
+            old_file_name,
+        )
+        
         out_file_path = path.join(args.output_dir, out_file_name)
         if args.verbose: print('exporting data file: {}'.format(out_file_path))
-        try:
-            data[frame].to_csv(out_file_path)
-        except:
-            print('failed to export data - skippig file')
-            continue
+
+        pool.apply_async(write_output_file, (data[frame], out_file_path))
+
+    pool.close()
+    pool.join()
 
     return data
 

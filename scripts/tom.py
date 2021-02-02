@@ -165,20 +165,20 @@ def process_data_file(data_file, cols=columns2, verbose=False):
     
     if not path.isfile(data_file):
         print("not a file: {}, skipping".format(data_file))
-        return None
+        return pd.DataFrame()
     
     temp_data = read_log_file(data_file, verbose=verbose, columns=cols)
     
     if temp_data.empty:
         print("skipping corrupt file: {}".format(data_file))
-        return None
+        return pd.DataFrame()
     
     temp_data = clean_data_frame(temp_data, verbose=verbose)        # clean it -> generate index, etc.
 
     if not temp_data.empty:                     # append the dataframes to the global dataframe
         return temp_data
     else:
-        return None
+        return pd.DataFrame()
 
 
 
@@ -204,7 +204,7 @@ def read_log_file(
 
     if not path.isfile(log_file_path):
         print("no such file: {} -> skipping".format(log_file_path))
-        return None
+        return pd.DataFrame()
 
     try:
         temp_data_frame = pd.read_csv(
@@ -219,7 +219,7 @@ def read_log_file(
 
     except:
         print("could not process file: {}, skipping".format(log_file_path))
-        return None
+        return pd.DataFrame()
 
     if verbose: print(temp_data_frame.info())
     
@@ -322,7 +322,7 @@ def GPS_date_time_correction(df, verbose=False):
     try:
         gps_date_time_epoch = pd.to_datetime("{} {}".format("-".join(date), ":".join(time)), utc=True).value / 10**9
     except Exception as e:
-        print("failed to generate gpsDateTime for {} : {}".format(date, time))
+        print("failed to generate gpsDateTime for {} : {}: {}".format(date, time, e))
         print("skipping dataframe")
         return False
     
