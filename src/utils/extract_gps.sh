@@ -15,7 +15,8 @@ for file in $(ls ${SOURCE_DIR}/*.csv ) ; do
     echo $outfile_path
 
     cat $file |              # print each file to stdout
-    cut -d ',' -f 2,5-7 |    # select epoch [2] and gps data [5-7]
+    tail -n +2 |             # skip the first two lines
+    cut -d ' ' -f 1,3-5 |    # select epoch [2] and gps data [5-7]
     uniq -u > $outfile_path  # reduce to only unique time stamps and write out
 
 done
