@@ -29,8 +29,28 @@ For fluid mechanics, closely monitoring offshore wind turbines under wind and wa
 8. If viewed from above, the structural response describes a closed curve (orbit) which can be characterized by it shape (eccentricity), mean amplitude and direction. Mathematically speaking, this is a lissajous-figure, where the time series from one response direction is plotted as a function of the time series of the second response direction. 
 
 
----
 [1]: under installation condition
+
+---
+
+## Experimental Setup
+
+### Locations
+
+Several locations were used to record data during the installation of the wind farm. They are listed in the following table:
+
+| Location       | Description |
+|----------------|-------------|
+| helihoist-N    | data recorded from the helicopter hoisting platform atop the turbine nacelle. For most installations, two sensor boxes were deployed to ensure data availability. These are accounted for with the numbering (N) |
+| tp             | Measurements from the transition piece |
+| sbitroot       | Measurements from the blade lifting yoke's blade root side. The Z-axis is aligned to the blade main axis, X-Axis is perpendicular. |
+| sbittip        | Measurements from the tip side of the blade lifting yoke. Z-axis aligned with the blade main axis, X-axis perpendicular | 
+| damper         | Measurements from the tuned mass damper used during single blade installation |
+| towertop       | measurements from inside the turbine tower at the upper lift plattform | 
+| towertransfer  | measurements from atop the towers during sail out from the base harbour to the installation site |
+
+---
+
 
 ## Raw data and data publication
 
@@ -55,110 +75,51 @@ Data sources are roughly sorted into categories. The following table lists these
 
 | Data type / data source | Description                                                            |
 |-------------------------|------------------------------------------------------------------------|
-| msr / location          | acceleration measurements, obtained by commercial accelerometer. For details, please refere to the [data description](doc/msr_data_description.md) |
-| tom / location          | data from custom build sensor boxes. Data includes acceleration, angular acceleration, magnetic field, gnss recording and rough estimates of the eulerian angles. For detail refere to the [data description](doc/tom_data_description) |
-| waves/wave_buoy         | Sea state statistics for the installatin period of the turbine. Details can be found in the [data description](doc/wave_buoy_data_description.md) | 
-| waves/fino              | Sea state statistics from the german research platform [FINO1](htttps://) located approx. 6 km from the installation site.  Data description [here](doc/fino_wave_data_description.md) | 
-| waves/wave_radar        | Sea state statstics, recorded by a wave rider wave laser. Data description is available in the [docs](doc_waverider_waves_data_description.md)
-| wind/lidar              | high fidelity wind data recorded on the installation vessel during the installation of the wind farm. Details regarding data recording and data format can be found [here](doc/lida_data_description.md) | 
-| wind/scada              | 10 min. mean wind statistisc recorded on wind turbines in the vicinity of the installation site. This data is used in case no LIDAR data is available. Data description can be found [here](doc/scada_data_description.md) | 
-| wind/anemometer         | During some of the installations, anemometers were present on the installation vessel. These recordings are sorted into this sub-subfolder. Data description is available [here](doc/anemometer_data_description.md) | 
-| wind/fino               | Additonal wind statistics recorded by the FINO research station. Least recommended for investigations, as these recordings were taken approx. 6 km from the installation site. Data description [here](doc/fino_wind_data_description.md) | 
+| location / msr          | acceleration measurements, obtained by commercial accelerometer. For details, please refere to the [data description](doc/msr_data_description.md) |
+| location / tom          | data from custom build sensor boxes. Data includes acceleration, angular acceleration, magnetic field, gnss recording and rough estimates of the eulerian angles. For detail refere to the [data description](doc/tom_data_description) |
+| waves / wmb-sued        | Sea state statistics for the installatin period of the turbine. Details can be found in the [data description](doc/wmb-sued_data_description.md) | 
+| waves / fino            | Sea state statistics from the german research platform [FINO1](htttps://) located approx. 6 km from the installation site.  Data description [here](doc/fino_wave_data_description.md) | 
+| waves / waveradar       | Sea state statstics, recorded by a wave rider wave laser. Data description is available in the [docs](doc/wave-radar_data_description.md)
+| wind / lidar            | high fidelity wind data recorded on the installation vessel during the installation of the wind farm. Details regarding data recording and data format can be found [here](doc/lidar_data_description.md) | 
+| wind / scada            | 10 min. mean wind statistisc recorded on wind turbines in the vicinity of the installation site. This data is used in case no LIDAR data is available. Data description can be found [here](doc/scada_data_description.md) | 
+| wind / anemometer       | During some of the installations, anemometers were present on the installation vessel. These recordings are sorted into this sub-subfolder. Data description is available [here](doc/anemometer_data_description.md) | 
+| wind / fino             | Additonal wind statistics recorded by the FINO research station. Least recommended for investigations, as these recordings were taken approx. 6 km from the installation site. Data description [here](doc/fino_wind_data_description.md) | 
 
+---
 
-The data directory is hence organized in the following order: 
+### Data folder structure
+
+The data directory cotains two main folders: turbines and environment
 
 ```
-data
-└── turbine_12
-    ├── data_type_1
+turbines
+└── turbine-NN
+    ├── location
     │   ├── data_source_1
-    │   │   ├── clean # -> contains sanitized measurement data (e.g. time zones, resampling)
-    │   │   └── raw
-    │   │       └── measurement-start_measurement-end # -> raw data as recorded during the measurement campaign
+    │   │   ├── clean # -> sanitized raw data
+    |   |   ├── processed # -> processed data / results
+    |   |   |   ├── gps # -> contains uniq gps coordinates
+    |   |   |   ├── acceleration_velocity_position # -> integrated vectors
 ```
 
-As an example, the (incomplete) data from turbine_12 is listed below:
+```
+environment
+├── wind
+|   ├── lidar
+|   ├── scada
+|   ├── scada
+|   └── anemometer
+└── waves
+    ├── wmb-sued
+    ├── waveradar
+    └── fino
+```
+
+As an example, the (incomplete) data from turbine-04 is listed below:
 
 ```
 
-data
-└── turbine_12
-    ├── msr
-    │   ├── sbitroot
-    │   │   └── raw
-    │   │       └── 2019-11-05_2019-11-08
-    │   │           └── msr327234_191105_004503_sbit_root.txt
-    │   ├── sbittip
-    │   │   └── raw
-    │   │       └── 2019-11-05_2019-11-08
-    │   │           └── msr327233_191105_003530_sbit-tip.txt
-    │   └── towertop
-    │       └── raw
-    │           └── 2019-11-05_2019-11-08
-    │               └── msr327230_191104_175135_tower.txt
-    ├── tom
-    │   ├── helihoist
-    │   │   ├── clean
-    │   │   └── raw
-    │   │       └── 2019-11-04_2019-11-08
-    │   │           ├── log_0000.txt
-    │   │           ├── log_0001.txt
-    │   │           ├── log_0002.txt
-    │   │           ├── ...
-    │   ├── sbitroot
-    │   │   └── raw
-    │   │       └── 2019-11-04_2019-11-08
-    │   │           ├── log_0000.txt
-    │   │           ├── log_0001.txt
-    │   │           ├── log_0002.txt
-    │   │           ├── ...
-    │   ├── sbittip
-    │   │   └── raw
-    │   │       └── 2019-11-04_2019-11-08
-    │   │           ├── log_0000.txt
-    │   │           ├── log_0001.txt
-    │   │           ├── log_0002.txt
-    │   │           ├── ...
-    │   ├── towertop
-    │   │   └── raw
-    │   │       └── 2019-11-04_2019-11-08
-    │   │           ├── log_0000.txt
-    │   │           ├── log_0001.txt
-    │   │           ├── log_0002.txt
-    │   │           ├── ...
-    │   ├── towertransfer
-    │   │   └── raw
-    │   │       └── 2019-11-04_2019-11-08
-    │   │           ├── log_0000.txt
-    │   │           ├── log_0001.txt
-    │   │           ├── log_0002.txt
-    │   │           ├── ...
-    │   └── tp
-    │       └── raw
-    │           └── 2019-11-04_2019-11-08
-    │               ├── log_0000.txt
-    │               ├── log_0001.txt
-    │               ├── log_0002.txt
-    │               ├── ...
-    ├── waves
-    │   └── wave_buoy
-    │       ├── clean
-    │       │   └── turbine_12-waves-wave_buoy-clean-2019-11-04_2019-11-08.pickle
-    │       └── raw
-    │           └── 2019-11-05_2019-11-08
-    │               └── wmb_sued_twb_ii_04.11.19_-_08.11.19.xls
-    └── wind
-        └── lidar
-            ├── clean
-            │   └── turbine_12-wind-lidar-clean-2019-11-04_2019-11-08.pickle
-            └── raw
-                └── 2019-11-05_2019-11-08
-                    ├── 1708-lidar-log-190809_-_logfile_04nov19.csv
-                    ├── 1708-lidar-log-190809_-_logfile_05nov19.csv
-                    ├── 1708-lidar-log-190809_-_logfile_06nov19.csv
-                    ├── 1708-lidar-log-190809_-_logfile_07nov19.csv
-                    └── 1708-lidar-log-190809_-_logfile_08nov19.csv
+
 
 ```
 
@@ -168,17 +129,23 @@ data
 - Time conversion sugar
 - Code refers to data and vice versa
 
+
 ## Data processing
 
-### Cleaning
+### Cleaning and sanitizing
 
 - Installation phases
 - Matching (in time)
+- Nacelle orientation
 - ...
 
 ### Analysis of Orbits
 
-- Butterworth
+- Resampling
+- Filtering
+- Numerical integration
+- Ellipse fitting
+- Statistical analysis
 - Amplitude envelope
-
+- ...
 

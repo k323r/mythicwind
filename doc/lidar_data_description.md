@@ -8,7 +8,6 @@ The data recorded by the lidar was exported as csvs and provided by the vessel o
 
 | Parameter       | Description |
 |-----------------|-------------|
-| datetime        | human readable time stamp (time zone aware!) [YYYY-MM-DD HH:MM:SS+XX:XX] |
 | epoch           | time stamp as a unix epoch [s] |
 | wind_speed_N    | The wind speed at the N'th return level [m/s] |
 | wind_dir_N      | Wind direction at the N'th return level in the vessels reference frame [degree] |

@@ -16,7 +16,7 @@ Parameters included in the data files are:
 
 | Parameter name | Description |
 |----------------|-------------|
-| Date/Time      | the date and time of the spectrum that is summarized in this line [YYYY-MM-DD hh:mm]|
+| epoch          | the date and time of the spectrum that is summarized in this line. Time format is unix epoch [s] |
 | Tp             | Tp := 1 / fp, peak period, the frequency at which S(f) is maximal [s]|
 | Dirp           | peak direction, the direction at f = fp [deg due North]|
 | Sprp           | peak spread, the directional spread at f = fp [s]|
@@ -37,7 +37,6 @@ Parameters included in the data files are:
 | Bat            | Bat, battery status (0..7) |
 | m[n]           | m[n] := Integral from f=0 to f=Inf over S(f) * f ^ n |
 | m[n,2]         | m[n,2] := Integral from f=0 to f=Inf over S(f) ^ 2 * f ^ n |
-| Date and time  | Date and time (start of acquisition) [YYYY-MM-DD hh:mm] |
 | Percentage     | Percentage of data with no reception errors [%] | 
 | Hmax           | Height of the highest wave [cm] |
 | Tmax           | Period of the highest wave) [s] |
