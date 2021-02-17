@@ -24,7 +24,7 @@ def parse_commandline_arguments():
     parser.add_argument("--input", help='input: directory cotaining data files')
     parser.add_argument("--input-file-pattern", help='pattern to select input files. Default: *.csv', type=str, default='*.csv')
     parser.add_argument("--output", help="output: directory for output files", type=str)
-    parser.add_argument("--output-prefix", help="output file prefix. Default is acceleration-velocity-position", type=str, default='acceleration-velocity-position')
+    parser.add_argument("--output-prefix", help="output file prefix. Default is acc-vel-pos", type=str, default='acc-vel-pos')
     parser.add_argument("--procs", help="number of processors to use", type=int)
 
     # processing 

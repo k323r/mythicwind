@@ -27,14 +27,21 @@ def read_frames_parallel(input_dir, pattern='*.csv', n_procs=8):
     
     return [frame.get() for frame in frames]
 
-def write_frame(frame, out_file_path, precision='%1.5f'):
+def write_frame(frame, out_file_path, precision='%1.6f', delimiter=',', comments=''):
 
     # numpy copy
+    frame.insert(loc=0, column='epoch', value=frame.index.astype('int64')/1.0e9)
     frame_np = frame.to_numpy()
-    header = str(frame.columns.to_list()).replace('[','').replace(']','')
+    header = str(frame.columns.to_list()).replace('[','').replace(']','').replace('\'', '').replace(' ', '')
     
     try:
-        np.savetxt(out_file_path, frame_np, '%1.5f', header=header)
+        np.savetxt(out_file_path, 
+            frame_np, 
+            fmt=precision, 
+            header=header, 
+            delimiter=delimiter,
+            comments=comments,
+        )
     except Exception as e:
         print(f'failed to export data {e} - skippig file {out_file_path}')
 

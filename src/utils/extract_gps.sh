@@ -58,11 +58,13 @@ cut -d '_' -f1-3    # keep the first three fields: turbine, measurement position
 # print all availale files and extract gps tracks
 
 find $tom_dir -type f -iname "*.csv" | # use find to generate a list of files
-parallel extract_gps_from_file.sh {} $output_dir $output_suffix
+parallel --eta extract_gps_from_file.sh {} $output_dir $output_suffix
 
 # concatenate all newly generated gps tracks into one record
-cat ${output_dir}/*${output_suffix}.csv |
-sort -k 1 -n > ${output_dir}/${description_string}_${output_suffix}.csv
+cat ${output_dir}/*${output_suffix}*.csv |
+sed -e 's/,/ /g' |
+sort -k 1 -n -u --parallel 8 |
+sed -e 's/ /,/g' > ${output_dir}/${description_string}_${output_suffix}.csv
 
 #### Footnotes
 # [1]:    to obfuscate the postions of individuals turbines, a constant offset was substracted

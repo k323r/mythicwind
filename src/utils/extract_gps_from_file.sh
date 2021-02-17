@@ -52,10 +52,16 @@ tom_file_name=$(
     cut -d '.' -f1      # remove the file ending
 )
 
-output_file_path="${output_dir}/${tom_file_name}_${output_suffix}.csv"
+output_file_name=$(echo $tom_file_name | sed -e "s/clean/${output_suffix}/")
+
+output_file_path="${output_dir}/${output_file_name}.csv"
+
+echo "epoch,latitude,longitude,altitude" > $output_file_path
 
 cat $tom_file | # find returns full paths... 
 tail -n +2 |             # skip the first two lines
-cut -d ' ' -f 1,3-5 |    # select epoch [2] and gps data [5-7]
-awk '$2 != -54.000 && $3 != -6.500' | # drop lines where no gps data is available [0]
-uniq -f 1 > $output_file_path  # reduce to only unique time stamps and write out
+cut -d ',' -f 1,3-5 |    # select epoch [2] and gps data [5-7]
+awk -F, '$2 != -54.000 && $3 != -6.500' | # drop lines where no gps data is available [0]
+sed -e 's/,/ /g' | # change the delimiter to space
+uniq -f 1 |         # return only uniq fields, ignoring the first column
+sed -e 's/ /,/g' >> $output_file_path  # change the delimiter back to a comma
