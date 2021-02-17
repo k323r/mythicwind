@@ -1,5 +1,7 @@
 # mythicwind
 
+For detailled documentation, please take a look at the [mythicwind wiki](https://github.com/k323r/mythicwind/wiki)
+
 ## Overview
 
 This repository contains scripts, libraries and notebooks used to investigate data from an offshore measurement campaign conducted during the installation of the offshore wind [farm trianel wind farm borkum II](https://www.trianel-borkumzwei.de/). 
