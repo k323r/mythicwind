@@ -16,7 +16,7 @@ CREATE TABLE blade_installations (
     blade_number INT NOT NULL,
     blade_installation_start REAL NOT NULL,
     blade_installation_stop REAL NOT NULL,
-    blade_installation_is_successful INT CHECK(
+    blade_installation_is_successful INT NOT NULL CHECK(
         blade_installation_is_successful = 0
         OR blade_installation_is_successful = 1),
     FOREIGN KEY (turbine_id) REFERENCES turbines (turbine_id));
