@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# extracts gps tracks from tom files located in a directory provided as the first arg
 
 function usage_extrac_gps () {
     cat <<EOL

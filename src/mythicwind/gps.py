@@ -2,6 +2,8 @@ import vg
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from os import path
+import sys
 
 
 def estimate_sbi(helihoist,
@@ -126,8 +128,14 @@ def plot_sbi(
     sbit_v,
     nacelle_v,
     sbi_time_indices,
+    nacelle_angle=None,
     turbine_name='turbine_01',
-):
+    output_dir='.',
+):  
+
+    if not nacelle_angle:
+        print('please provide a nacelle orientation angle!')
+        sys.exit()
 
     start = sbi_time_indices[0] - pd.to_timedelta(1, unit='h')
     stop = sbi_time_indices[-1] + pd.to_timedelta(1, unit='h')
@@ -186,7 +194,7 @@ def plot_sbi(
 
     ax1.plot([sbitroot_v[0], sbitroot_v[0]+nacelle_v[0]],
              [sbitroot_v[1], sbitroot_v[1]+nacelle_v[1]],
-             label='orientation nacelle',
+             label=f'orientation nacelle: {nacelle_angle:.0f} due North',
              linewidth=2,
              color='tab:green'
              )
@@ -203,7 +211,7 @@ def plot_sbi(
 
     plt.axvspan(xmin=sbi_time_indices[0],
                 xmax=sbi_time_indices[-1],
-                label='installation of blade 1',
+                label='single blade installation',
                 facecolor='w',
                 edgecolor='grey',
                 hatch='x'
@@ -214,6 +222,6 @@ def plot_sbi(
     ax2.set_xlabel('date/time')
 
     plt.gcf().autofmt_xdate()
-    plt.tight_layout()
+    #plt.tight_layout()
 
-    plt.savefig(f'{turbine_name}_sbi.png', dpi=150)
+    plt.savefig(path.join(output_dir, f'{turbine_name}_sbi.png'), dpi=300)

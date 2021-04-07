@@ -1,7 +1,15 @@
 #!/bin/bash
 
 PWD=$(pwd)
-TURBINE=$1
+
+# create a dir tree for storing turbine data
+
+if [ -z $1] ; then
+    echo "please provide a turbine id"
+    exit
+else
+    TURBINE=$1
+fi
 
 echo "creating directory tree for ${TURBINE}"
 

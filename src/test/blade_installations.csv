@@ -1,5 +1,0 @@
-blade_installation_id,turbine_id,blade_number,blade_installation_start,blade_installation_stop,blade_installation_is_successful
-1,1,1,1,1,1
-2,1,1,2,2,0
-3,1,2,3,3,1
-4,1,3,4,4,0

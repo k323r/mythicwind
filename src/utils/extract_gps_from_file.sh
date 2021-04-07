@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# extracts gps tracks from a rom file
 
 function usage_extract_gps_from_file () {
     cat <<EOL
