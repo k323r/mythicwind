@@ -1,0 +1,38 @@
+
+time stamp: 10:05:13 (17-03-2021
+
+No blade landing found for: 
+Turbine 08, 02hr54min,
+14:12 	(14-October-2019) 
+17:07 	(14-October-2019)
+
+time stamp: 10:05:59 (17-03-2021
+
+No blade landing found for: 
+Turbine 04, 00hr02min,
+15:36 	(07-September-2019) 
+15:39 	(07-September-2019)
+
+time stamp: 10:06:07 (17-03-2021
+
+ No overlap between signals and blade at hub height
+
+
+time stamp: 10:06:10 (17-03-2021
+
+No blade landing found for: 
+Turbine 08, 02hr54min,
+14:12 	(14-October-2019) 
+17:07 	(14-October-2019)
+
+time stamp: 10:06:17 (17-03-2021
+
+No blade landing found for: 
+Turbine 10, 00hr48min,
+21:40 	(23-October-2019) 
+22:29 	(23-October-2019)
+
+time stamp: 10:06:29 (17-03-2021
+
+ No overlap between signals and blade at hub height
+
