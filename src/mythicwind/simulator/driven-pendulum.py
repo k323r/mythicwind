@@ -7,7 +7,7 @@ from scipy import integrate
 import argparse
 
 
-def odeDrive(X, t, zeta, omega0, omegad_omega0, driving_force_amplitude):
+def odeDriveX(X, t, zeta, omega0, omegad_omega0, driving_force_amplitude):
     """
     Driven Harmonic Oscillator ODE
     """
@@ -19,8 +19,24 @@ def odeDrive(X, t, zeta, omega0, omegad_omega0, driving_force_amplitude):
     return [dotx, ddotx]  # return eine Liste von x' und x''
 
 
-# def phaseplane(args):
-#    pass
+def odeDriveY(Y, t, zeta, omega0, omegad_omega0, driving_force_amplitude):
+    """
+    Driven Harmonic Oscillator ODE
+    """
+    y, dotY = Y  # Input
+
+    omegad = omegad_omega0 * omega0
+    # ddotx = -2*zeta*omega0*dotx - omega0**2*x + F_m * np.sin(omegad * t) #DGL Gleichung
+    ddoty = (-1 / zeta * dotY) - np.sin(y) + (driving_force_amplitude * np.cos(omegad * t))
+    return [dotY, ddoty]  # return eine Liste von x' und x''
+
+'''def extern_force_data(csvfile):
+    df = pd.read_csv(csvfile)
+    function_list = np.asarray(df, dtype=np.float64, order='C')
+
+
+    return function_list'''
+
 
 
 def phaseplane_poincare(t, zeta=2, omega0=0.67, omegad_omega0=1., driving_force_amplitude = 1.04, initial_angle=(np.pi/2), initial_angular_velocity=1.,):
@@ -28,17 +44,22 @@ def phaseplane_poincare(t, zeta=2, omega0=0.67, omegad_omega0=1., driving_force_
     Update function and calc with odeint
     """
     X0 = [initial_angle,initial_angular_velocity]  # Anfangswerte für gedämpften Osz. -> initial condition
-
+    Y0 = [initial_angle,initial_angular_velocity]
     # The solution is an array with shape (1000 (n_t variable), 2)
     # The first column is amplitude, and the second is velocity
-    sol = integrate.odeint(odeDrive, X0, t, args=(zeta, omega0, omegad_omega0, driving_force_amplitude))
+    solX = integrate.odeint(odeDriveX, X0, t, args=(zeta, omega0, omegad_omega0, driving_force_amplitude))
+    solY = integrate.odeint(odeDriveY, Y0, t, args=(zeta, omega0, omegad_omega0, driving_force_amplitude))
+
 
     #poincare section
-    x = [sol[args.end_time * i, 0] for i in range(args.end_time)]  # poincare over position
-    y = [sol[args.end_time * i, 1] for i in range(args.end_time)]  # poincare over velocity
-    poincare_component_list = [x, y]
+    xX = [solX[args.end_time * i, 0] for i in range(args.end_time)]  # poincare over position
+    yX = [solX[args.end_time * i, 1] for i in range(args.end_time)]  # poincare over velocity
+    poincare_component_listX = [xX, yX]
+    xY = [solX[args.end_time * i, 0] for i in range(args.end_time)]  # poincare over position
+    yY = [solX[args.end_time * i, 1] for i in range(args.end_time)]  # poincare over velocity
+    poincare_component_listY = [xY, yY]
 
-    return sol, poincare_component_list
+    return solX, solY, poincare_component_listX, poincare_component_listY
 
 def plot_phaseplane(sol):
 
@@ -50,24 +71,6 @@ def plot_phaseplane(sol):
     plt.ylabel("$\dot{x}$, [$m.s^{-1}$] ")
     plt.show()
 
-'''
-def poincare(zeta=2, omega0=0.67, omegad_omega0=1., driving_force_amplitude = 1.04, initial_angle=(np.pi/2), initial_angular_velocity=1.):
-
-
-    # We will generate a solution at 16000000(4000*4000) evenly spaced samples in the interval
-    # 0 <= t <= 4000
-    t_pm = np.linspace(0, 4000 * (2*np.pi) / omega0, num=16000000)
-
-    # initial conditions
-    X0 = [args.initial_angle, args.driv]
-
-    # Poincare calc (4000, because of t_pm)
-    xs = integrate.odeint(odeDrive, X0, t_pm, args=(zeta, omega0, omegad_omega0, driving_force_amplitude))
-    x = [xs[4000*i, 0] for i in range(4000)]  # poincare over position
-    y = [xs[4000*i, 1] for i in range(4000)]  # poincare over velocity
-    poincare_component_list = [x,y]
-
-    return poincare_component_list'''
 
 def plot_poincare(poincare_list):
     
@@ -79,7 +82,7 @@ def plot_poincare(poincare_list):
     plt.title('The Poincare section')
     plt.show()
 
-def sub_plot_save(sol, poincare_list, path):
+def sub_plot_save(solX, solY, poincare_listX, poincare_listY, path, t):
 
     # plotting deflection and peaks with Datetime
     fig = plt.figure(figsize=(16,12))
@@ -87,38 +90,65 @@ def sub_plot_save(sol, poincare_list, path):
 
 
     ax = fig.add_subplot(3,3,1)
-    ax.plot(sol[:, 0], sol[:, 1])
+    ax.plot(solX[:, 0], solX[:, 1])
     ax.grid()
     ax.set_xlabel("$x$, [$m$]")
     ax.set_ylabel("$\dot{x}$, [$m.s^{-1}$] ")
-    ax.set_title("Phase Plane")
+    ax.set_title("Phase Plane X-function")
 
-    ax = fig.add_subplot(3,3,2)
-    ax.scatter(poincare_list[0], poincare_list[1], color='blue', s=0.1)
+    ax = fig.add_subplot(3, 3, 2)
+    ax.plot(t, solX[:, 0])
+    ax.grid()
+    ax.set_ylim(-10., 10.)
+    ax.set_xlabel("Time, $t$")
+    ax.set_ylabel("Amplitude, $a$")
+    ax.set_title("Amplitude X-Function")
+
+    ax = fig.add_subplot(3,3,3)
+    ax.scatter(poincare_listX[0], poincare_listX[1], color='blue', s=0.1)
     ax.set_xlabel('x', fontsize=15)
     ax.set_ylabel('y', fontsize=15)
     ax.tick_params(labelsize=15)
-    ax.set_title('Poincare')
+    ax.set_title('Poincare X-function')
 
-    ax = fig.add_subplot(3, 3, 3, projection='3d')
-    X = sol[:, 0]
-    Y = sol[:, 0]
-    X, Y = np.meshgrid(X, Y)
-    R = X+Y
-    Z = R
+    ax = fig.add_subplot(3, 3, 4)
+    ax.plot(solY[:, 0], solY[:, 1])
+    ax.grid()
+    ax.set_xlabel("$y$, [$m$]")
+    ax.set_ylabel("$\dot{y}$, [$m.s^{-1}$] ")
+    ax.set_title("Phase Plane Y-function")
 
-    surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
-                           linewidth=0, antialiased=False)
+    ax = fig.add_subplot(3, 3, 5)
+    ax.plot(t, solY[:, 0])
+    ax.grid()
+    ax.set_ylim(-10., 10.)
+    ax.set_xlabel("Time, $t$")
+    ax.set_ylabel("Amplitude, $a$")
+    ax.set_title("Amplitude Y-Function")
 
-    ax.set_zlim(-1, 1)
-    ax.set_xlabel("X Amplitude")
-    ax.set_ylabel("Y Amplitude")
-    ax.set_title("3D Amplitude")
+    ax = fig.add_subplot(3, 3, 6)
+    ax.scatter(poincare_listY[0], poincare_listY[1], color='blue', s=0.1)
+    ax.set_xlabel('x', fontsize=15)
+    ax.set_ylabel('y', fontsize=15)
+    ax.tick_params(labelsize=15)
+    ax.set_title('Poincare Y-function')
+
+    ax = fig.add_subplot(3, 3, 7)
+    ax.plot(solX[:, 0], solY[:, 0])
+    ax.grid()
+    ax.set_xlabel("$x$, [$m$]")
+    ax.set_ylabel("$y$, [$m$]")
+    ax.set_title("X over Y Amplitude")
+
+    ax = fig.add_subplot(3, 3, 8)
+    ax.plot(solX[:, 1], solY[:, 1])
+    ax.grid()
+    ax.set_xlabel("$\dot{x}$, [$m.s^{-1}$]")
+    ax.set_ylabel("$\dot{y}$, [$m.s^{-1}$] ")
+    ax.set_title("X over Y Velocity")
+
     fig.tight_layout(pad=3.0)
-
     fig.savefig(path, dpi=300)
-
-
 
 if __name__ == '__main__':
 
@@ -142,6 +172,8 @@ if __name__ == '__main__':
                           help='forcing function amplitude', default=1.04)
     cmd_args.add_argument('--omegad0', type=float,
                           help='factor to scale forcing function frequency', default=1.0)
+    '''cmd_args.add_argument('--force-file', type=argparse.FileType('r'),
+                          help='forcing function frequency', default='/Users/mertarat/Documents/GitHub/Output_Data_Pendulum/force-file.csv')'''
 
     cmd_args.add_argument('--verbose',
                           default=False, action='store_true', help='')
@@ -163,14 +195,14 @@ if __name__ == '__main__':
 
 
     sol = phaseplane_poincare(t, zeta=args.zeta, omega0=args.omega0, omegad_omega0=args.omegad0, driving_force_amplitude= args.driving_force_amplitude,
-               initial_angle=args.initial_angle, initial_angular_velocity=args.initial_angular_velocity)
+                              initial_angle=args.initial_angle, initial_angular_velocity=args.initial_angular_velocity)
 
     #args.show_plots = True
-    if args.show_plots: plot_phaseplane(sol[0]), plot_poincare(sol[1])
+    if args.show_plots: plot_phaseplane(sol[0]), plot_phaseplane(sol[1]), plot_poincare(sol[2]), plot_poincare(sol[3])
 
     if args.save_plot_dir:
         path = f'{args.save_plot_dir}/poincare_zeta:{args.zeta}-omega0:{args.omega0}-A:{args.driving_force_amplitude}.png'
         print(f'path: {path}')
-        sub_plot_save(sol[0], sol[1], path)
+        sub_plot_save(sol[0], sol[1], sol[2], sol[3], path, t)
 
 
