@@ -14,8 +14,8 @@ def odeDriveX(X, t, zeta, omega0, omegad_omega0, driving_force_amplitude):
     x, dotx = X  # Input
     
     omegad = omegad_omega0 * omega0
-    # ddotx = -2*zeta*omega0*dotx - omega0**2*x + F_m * np.sin(omegad * t) #DGL Gleichung
-    ddotx = (-1/zeta * dotx) - np.sin(x) + (driving_force_amplitude * np.cos(omegad * t))
+    ddotx = -2*zeta*omega0*dotx - omega0**2*x + driving_force_amplitude * np.sin(omegad * t) #DGL Gleichung
+    #ddotx = (-1/zeta * dotx) - np.sin(x) + (driving_force_amplitude * np.cos(omegad * t))
     return [dotx, ddotx]  # return eine Liste von x' und x''
 
 
@@ -26,8 +26,8 @@ def odeDriveY(Y, t, zeta, omega0, omegad_omega0, driving_force_amplitude):
     y, dotY = Y  # Input
 
     omegad = omegad_omega0 * omega0
-    # ddotx = -2*zeta*omega0*dotx - omega0**2*x + F_m * np.sin(omegad * t) #DGL Gleichung
-    ddoty = (-1 / zeta * dotY) - np.sin(y) + (driving_force_amplitude * np.cos(omegad * t))
+    ddoty = -2*zeta*omega0*dotY - omega0**2*y + driving_force_amplitude * np.sin(omegad * t) #DGL Gleichung
+    #ddoty = ((-1 / zeta) * dotY) - np.sin(y) + (driving_force_amplitude * np.cos( omegad * t))
     return [dotY, ddoty]  # return eine Liste von x' und x''
 
 '''def extern_force_data(csvfile):
@@ -99,7 +99,7 @@ def sub_plot_save(solX, solY, poincare_listX, poincare_listY, path, t):
     ax = fig.add_subplot(3, 3, 2)
     ax.plot(t, solX[:, 0])
     ax.grid()
-    ax.set_ylim(-10., 10.)
+    ax.set_ylim(-2., 2.)
     ax.set_xlabel("Time, $t$")
     ax.set_ylabel("Amplitude, $a$")
     ax.set_title("Amplitude X-Function")
@@ -121,7 +121,7 @@ def sub_plot_save(solX, solY, poincare_listX, poincare_listY, path, t):
     ax = fig.add_subplot(3, 3, 5)
     ax.plot(t, solY[:, 0])
     ax.grid()
-    ax.set_ylim(-10., 10.)
+    ax.set_ylim(-2., 2.)
     ax.set_xlabel("Time, $t$")
     ax.set_ylabel("Amplitude, $a$")
     ax.set_title("Amplitude Y-Function")
@@ -159,17 +159,17 @@ if __name__ == '__main__':
     cmd_args.add_argument('--initial-angular-velocity', type=float,
                           help='initial velocity of the driven pendulum', default=0.)
     cmd_args.add_argument('--end-time', type=int,
-                          help='duration of the simulation', default=100)
+                          help='duration of the simulation', default=50)
     cmd_args.add_argument('--integration-time-step', type=float,
                           help='integration time step', default=0.01)
 
 
     cmd_args.add_argument('--zeta', type=float,
-                          help='damping of the pendulum', default=2.0)
+                          help='damping of the pendulum', default=0.10)
     cmd_args.add_argument('--omega0', type=float,
-                          help='forcing function frequency', default=0.67)
+                          help='forcing function frequency', default=6.28)
     cmd_args.add_argument('--driving-force-amplitude', type=float,
-                          help='forcing function amplitude', default=1.04)
+                          help='forcing function amplitude', default=1.00)
     cmd_args.add_argument('--omegad0', type=float,
                           help='factor to scale forcing function frequency', default=1.0)
     '''cmd_args.add_argument('--force-file', type=argparse.FileType('r'),
