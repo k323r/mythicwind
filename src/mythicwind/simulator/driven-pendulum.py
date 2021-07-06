@@ -13,10 +13,14 @@ def odeDriveX(t, X, zeta, omega0, omegad_omega0, driving_force_amplitude, force_
     Driven Harmonic Oscillator ODE, a = 0,4 (zeta), Lookup Table für extern function statt curve fitting wegen genauigkeit
     """
     x, dotx = X  # Input
-    
-    omegad = omegad_omega0 * omega0
+
+    # Standard Osc
+    # omegad = omegad_omega0 * omega0
+    # ddotx = (-1/zeta * dotx) - np.sin(x) + (driving_force_amplitude * np.cos(omegad * t))
+
+
     ddotx = -2*zeta*omega0*dotx - omega0**2*x + driving_force_amplitude * calc_scalar(force_valsX, t) #DGL Gleichung
-    #ddotx = (-1/zeta * dotx) - np.sin(x) + (driving_force_amplitude * np.cos(omegad * t))
+
     return [dotx, ddotx]  # return eine Liste von x' und x''
 
 
@@ -25,10 +29,12 @@ def odeDriveY(t, Y, zeta, omega0, omegad_omega0, driving_force_amplitude, force_
     Driven Harmonic Oscillator ODE
     """
     y, dotY = Y  # Input
+    # Standard Osc
+    # omegad = omegad_omega0 * omega0
+    # ddoty = ((-1 / zeta) * dotY) - np.sin(y) + (driving_force_amplitude * np.cos( omegad * t))
 
-    omegad = omegad_omega0 * omega0
     ddoty = -2*zeta*omega0*dotY - omega0**2*y + driving_force_amplitude * calc_scalar(force_valsY, t) #DGL Gleichung
-    #ddoty = ((-1 / zeta) * dotY) - np.sin(y) + (driving_force_amplitude * np.cos( omegad * t))
+
     return [dotY, ddoty]  # return eine Liste von x' und x''
 
 def extern_force_data(csvfile, time_unit):
@@ -78,9 +84,9 @@ def calc_scalar(force_vals, t_point):
     return force_scalar[t_point]
 
 
-def phaseplane_poincare(t, zeta=2, omega0=0.67, omegad_omega0=1., driving_force_amplitude = 1.04, initial_angle=(np.pi/2), initial_angular_velocity=1.):
+def ode_solver_with_poincare(t, zeta=2, omega0=0.67, omegad_omega0=1., driving_force_amplitude = 1.04, initial_angle=(np.pi/2), initial_angular_velocity=1.):
     """
-    Update function and calc with odeint
+    calc with ode solve_ivp
     """
     X0 = [initial_angle,initial_angular_velocity]  # Anfangswerte für gedämpften Osz. -> initial condition
     Y0 = [initial_angle,initial_angular_velocity]
@@ -237,11 +243,11 @@ if __name__ == '__main__':
 
 
 
-    sol = phaseplane_poincare(t, zeta=args.zeta, omega0=args.omega0, omegad_omega0=args.omegad0, driving_force_amplitude= args.driving_force_amplitude,
+    sol = ode_solver_with_poincare(t, zeta=args.zeta, omega0=args.omega0, omegad_omega0=args.omegad0, driving_force_amplitude= args.driving_force_amplitude,
                               initial_angle=args.initial_angle, initial_angular_velocity=args.initial_angular_velocity)
 
     #args.show_plots = True
-    if args.show_plots: plot_phaseplane(sol[0]), plot_phaseplane(sol[1]), plot_poincare(sol[2]), plot_poincare(sol[3])
+    #if args.show_plots: plot_phaseplane(sol[0]), plot_phaseplane(sol[1]), plot_poincare(sol[2]), plot_poincare(sol[3])
 
     if args.save_plot_dir:
         path = f'{args.save_plot_dir}/poincare_zeta:{args.zeta}-omega0:{args.omega0}-A:{args.driving_force_amplitude}.png'
