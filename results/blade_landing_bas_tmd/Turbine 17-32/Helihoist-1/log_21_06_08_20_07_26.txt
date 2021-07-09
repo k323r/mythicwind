@@ -1,0 +1,5 @@
+
+time stamp: 20:07:26 (08-06-2021
+
+ No data for either helihoist or sbit tip found for turbine 19
+
