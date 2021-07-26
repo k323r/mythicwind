@@ -50,9 +50,10 @@ idx_test_split = df_turb.index.get_loc(pd.to_datetime(cfg["test_split"]), method
 idx_eval_split = df_turb.index.get_loc(pd.to_datetime(cfg["eval_split"]), method='nearest')
 
 ts_in = df_turb[['deflection','xz_angle']].to_numpy()
-scaler = MinMaxScaler()
-scaler.fit(ts_in[:idx_test_split, ::])
-ts_in = scaler.transform(ts_in)
+if cfg["use_scaler"]:
+    scaler = MinMaxScaler()
+    scaler.fit(ts_in[:idx_test_split, ::])
+    ts_in = scaler.transform(ts_in)
 ts_in = ts_in[np.newaxis, ::]
 
 # plt.figure(figsize = [12,8])

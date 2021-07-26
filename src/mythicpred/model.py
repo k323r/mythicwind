@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from tensorflow.python.ops import math_ops
 from matplotlib import pyplot as plt
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Conv1D, Dense, Conv2D, Layer, Lambda
@@ -15,9 +16,49 @@ from abc import abstractmethod, ABC
 
 DTYPE = tf.float32
 
+class NaivePast(Model):
+    def __init__(self, naive_lag, quant_n, quant_range, deflection_channel, model_name = "NaivePast"):
+        super(NaivePast, self).__init__(name = model_name)
+
+        self.lag = naive_lag
+        self.bins = list(np.linspace(quant_range[0], quant_range[1], quant_n + 1)[:-1])
+        self.quant_n = quant_n
+        self.deflection_channel = deflection_channel
+
+    @property
+    def max_lag(self):
+        return self.lag
+
+    def call(self, inp, training=False):
+        inp_max = tf.nn.max_pool1d(inp[:,:,self.deflection_channel:self.deflection_channel+1], ksize = self.lag, strides = 1, padding = "VALID")
+        inp_binned = math_ops._bucketize(inp_max, self.bins) - 1
+        return tf.one_hot(tf.squeeze(inp_binned,axis = -1), depth = self.quant_n)
+
+class NaiveConstant(Model):
+    def __init__(self, class_pred, quant_n, model_name = "NaiveConstant"):
+        super(NaiveConstant, self).__init__(name = model_name)
+
+        self.class_pred = class_pred
+        self.quant_n = quant_n
+
+    @property
+    def max_lag(self):
+        return 1
+
+    def call(self, inp, training=False):
+        pred_ones = tf.ones_like(tf.reduce_min(inp, axis = -1, keepdims=True))
+        pred_zeros = tf.zeros_like(tf.reduce_min(inp, axis = -1, keepdims=True))
+        pred = []
+        for k in range(self.quant_n):
+            if k == self.class_pred:
+                pred.append(pred_ones)
+            else:
+                pred.append(pred_zeros)
+        return tf.concat(pred, axis = -1)
+
 class TurbNet(Model):
-    def __init__(self, ddc_hidden, ddc_filters, ddc_activation, quant_n):
-        super(TurbNet, self).__init__()
+    def __init__(self, ddc_hidden, ddc_filters, ddc_activation, quant_n, model_name = "TurbNet"):
+        super(TurbNet, self).__init__(name = model_name)
 
         self.block_dconv = DDCBlock(ddc_hidden, ddc_filters, ddc_activation, quant_n)
 
