@@ -16,10 +16,10 @@ def get_default_cfg():
     cfg["test_split"] = "2019-10-15 12:00 UTC"
     cfg["eval_split"] = "2019-10-18 00:00 UTC"
     cfg["use_env"] = False # not yet implemented
-    cfg["use_scaler"] = False
+    cfg["use_scaler"] = True
 
     # model
-    cfg["model_name"] = "NaivePast" # class name of used model, "TurbNet" "NaiveConstant"
+    cfg["model_name"] = "TurbNet" # class name of used model, "TurbNet" "NaiveConstant"
 
     # TurbNet
     cfg["ddc_hidden"] = 10 # number of dyadic dilated convolutional layers
@@ -40,10 +40,10 @@ def get_default_cfg():
     cfg["batch_size"] = 10
     cfg["label_length"] = 32
     cfg["steps_per_epoch"] = 16
-    cfg["epochs"] = 10
+    cfg["epochs"] = 500
 
     # tensorflow
-    cfg["run_eagerly"] = True
+    cfg["run_eagerly"] = False
     cfg["verbose"] = 'auto'
 
     return cfg
