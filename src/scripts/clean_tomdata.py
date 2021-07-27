@@ -5,13 +5,6 @@
 import sys
 from os import path
 
-# from ..mythicwind.tom import process_data_set_parallel
-
-sys.path.insert(0, path.abspath(path.join(path.dirname(__file__), '..')))
-
-from mythicwind.tom import process_data_set_parallel
-from mythicwind.csv_io import export_data, export_data_parallel
-
 import numpy as np
 from multiprocessing import Pool
 from glob import glob
@@ -19,6 +12,15 @@ from math import sqrt, log
 
 import argparse
 from zipfile import ZipFile
+
+# from ..mythicwind.tom import process_data_set_parallel
+
+sys.path.insert(0, path.abspath(path.join(path.dirname(__file__), '..')))
+
+from mythicwind.tom import process_data_set_parallel
+from mythicwind.csv_io import export_data, export_data_parallel
+
+
 
 def parse_commandline_arguments():
 

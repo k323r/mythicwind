@@ -8,6 +8,12 @@ from os import path
 
 import pandas as pd
 
+import sys
+
+sys.path.insert(0, path.abspath(path.join(path.dirname(__file__), '..')))
+
+from mythicwind.csv_io import write_frame
+
 if __name__ == "__main__":
 
 
@@ -41,6 +47,8 @@ if __name__ == "__main__":
                        names=('acc_x', 'acc_y', 'acc_z', 'bat')
                       )
 
+    data.drop(columns=['bat'], inplace=True)
+
     data.index = pd.to_datetime(data.index).tz_localize(args.time_zone)
 
     # remove duplicate indices
@@ -50,7 +58,8 @@ if __name__ == "__main__":
 
     if args.output:
         try:
-            data.to_csv(args.output)
+            if args.verbose: print(f'* writing out data to {args.output}')
+            write_frame(data, args.output, precision='%1.3f')
         except Exception as e:
             print("*! failed to export csv!")
             print("*! -> {}".format(e))
