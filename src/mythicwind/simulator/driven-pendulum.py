@@ -170,7 +170,7 @@ def calc_force_valuesY(df, t_span):
 def calc_force_valuesA(df, t_span):
     #M_alpha
     time = df["time"]
-    Ma = df["M_alpha"]
+    Ma = df["Malpha"]
 
     fx_linear = interp1d(time, Ma)
     y_il = fx_linear(t_span)
@@ -453,7 +453,7 @@ if __name__ == '__main__':
     cmd_args.add_argument('--d', type=float,
                           help='d', default=0.05)
     cmd_args.add_argument('--force-file', type=argparse.FileType('r'),
-                          help='extern forcing function (Dataframe with 3 Columns (time,fx,fy) and n-rows)', default='/Users/mertarat/Documents/GitHub/Input-Output_Data_Pendulum/force-file-null-sin.csv')
+                          help='extern forcing function (Dataframe with 3 Columns (time,fx,fy) and n-rows)', default='/Users/mertarat/Documents/GitHub/Input-Output_Data_Pendulum/force-file-null-null-null.csv')
 
 
     cmd_args.add_argument('--verbose',
@@ -502,7 +502,7 @@ if __name__ == '__main__':
 
         force_valsY = calc_force_valuesY(force, t_precision)
 
-        force_valsA = calc_force_valuesY(force, t_precision)
+        force_valsA = calc_force_valuesA(force, t_precision)
 
         #ODE 2-Dimensional
         '''sol = ode_solver_with_poincare(t, zeta=args.zeta, omega0=args.omega0, omegad_omega0=args.omegad0,
