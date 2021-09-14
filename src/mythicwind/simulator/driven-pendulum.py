@@ -406,12 +406,18 @@ def ode_system_plotter(sol, poincare, path):
     ax.set_ylabel("Amplitude, $a$")
     ax.set_title("Amplitude Alpha-Function")
 
-    ax = fig.add_subplot(3,3,9)
+    '''ax = fig.add_subplot(3,3,9)
     ax.scatter(poincareA[0], poincareA[1], color='blue', s=0.1)
     ax.set_xlabel('x', fontsize=15)
     ax.set_ylabel('y', fontsize=15)
     ax.tick_params(labelsize=15)
-    ax.set_title('Poincare Alpha-function')
+    ax.set_title('Poincare Alpha-function')'''
+    ax = fig.add_subplot(3, 3, 9)
+    ax.scatter(sol.y[0, :], sol.y[2, :], color='blue', s=0.1)
+    ax.set_xlabel('x', fontsize=15)
+    ax.set_ylabel('y', fontsize=15)
+    ax.tick_params(labelsize=15)
+    ax.set_title('Fx over Fy')
 
     fig.tight_layout(pad=3.0)
     fig.savefig(path, dpi=300)
@@ -453,14 +459,14 @@ if __name__ == '__main__':
     cmd_args.add_argument('--d', type=float,
                           help='d', default=0.05)
     cmd_args.add_argument('--force-file', type=argparse.FileType('r'),
-                          help='extern forcing function (Dataframe with 3 Columns (time,fx,fy) and n-rows)', default='/Users/mertarat/Documents/GitHub/Input-Output_Data_Pendulum/force-file-null-null-null.csv')
+                          help='extern forcing function (Dataframe with 3 Columns (time,fx,fy) and n-rows)', default='./force-file-null-null-null.csv')
 
 
     cmd_args.add_argument('--verbose',
                           default=False, action='store_true', help='')
     cmd_args.add_argument('--val-show-plots', default=False,
                           action='store_true', help='show plots interactively')
-    cmd_args.add_argument('--save-plot-dir', help='directory to save plots', default='/Users/mertarat/Documents/GitHub/Input-Output_Data_Pendulum', type=str)
+    cmd_args.add_argument('--save-plot-dir', help='directory to save plots', default='.', type=str)
 
     cmd_args.add_argument('--calc', type= bool, default=True)
 
