@@ -1,5 +1,11 @@
 # mythicwind
 
+
+
+[![DOI](https://zenodo.org/badge/302665130.svg)](https://zenodo.org/badge/latestdoi/302665130)
+
+
+
 For detailled documentation, please take a look at the [mythicwind wiki](https://github.com/k323r/mythicwind/wiki)
 
 ## Overview
